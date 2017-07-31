@@ -1,0 +1,1 @@
+Screen scraper for Stecagrid solar inverters.
