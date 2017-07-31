@@ -1,1 +1,1 @@
-Screen scraper for Stecagrid solar inverters.
+Screen scraper for Stecagrid solar inverters with compatible firmwares.
