@@ -1,4 +1,4 @@
-Screen scraper for Stecagrid solar inverters with compatible firmwares. Uses the node.js built in http library-
+Screen scraper for Stecagrid solar inverters with compatible firmwares. Uses the node.js built in http library.
 
 *How to use*: 
 
@@ -41,7 +41,7 @@ mySteca.getProductionTotal().then((data) => {
     console.log("Total Production", data)
 });
 ```
-Tested with the following Steca Software version set: 
+Tested with the following Steca sw version set: 
 
 * HMI BFAPI 2.5.4<br>
 * HMI FBL 2.2.0<br>
