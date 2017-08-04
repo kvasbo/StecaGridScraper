@@ -17,7 +17,7 @@ function stecaGridScraper(host) {
                 path: "/gen.measurements.table.js"
             };
 
-            http.request(optionsEffect, function (res) {
+            const req = http.request(optionsEffect, function (res) {
 
                 var data = '';
 
@@ -35,7 +35,13 @@ function stecaGridScraper(host) {
                     resolve(dataInt);
 
                 });
-            }).end();
+            });
+
+            req.on('error', (e) => {
+                reject(e.message);
+            });
+
+            req.end();
 
         });
 
@@ -50,7 +56,7 @@ function stecaGridScraper(host) {
                 path: "/gen.yield.day.chart.js"
             };
 
-            http.request(optionsProdToday, function (res) {
+            const req = http.request(optionsProdToday, function (res) {
 
                 var data = '';
 
@@ -69,7 +75,13 @@ function stecaGridScraper(host) {
                     resolve(data);
 
                 });
-            }).end();
+            });
+
+            req.on('error', (e) => {
+                reject(e.message);
+            });
+
+            req.end();
 
         })
     };
@@ -83,7 +95,7 @@ function stecaGridScraper(host) {
                 path: "/gen.yield.month.chart.js"
             };
 
-            http.request(optionsProdMonth, function (res) {
+            const req = http.request(optionsProdMonth, function (res) {
 
                 var data = '';
 
@@ -110,7 +122,13 @@ function stecaGridScraper(host) {
                     resolve(sum);
 
                 });
-            }).end();
+            });
+
+            req.on('error', (e) => {
+                reject(e.message);
+            });
+
+            req.end();
 
         })
 
@@ -125,7 +143,7 @@ function stecaGridScraper(host) {
                 path: "/gen.yield.year.chart.js"
             };
 
-            http.request(optionsProdYear, function (res) {
+            const req = http.request(optionsProdYear, function (res) {
 
                 var data = '';
 
@@ -144,7 +162,13 @@ function stecaGridScraper(host) {
                     resolve(sum);
 
                 });
-            }).end();
+            });
+
+            req.on('error', (e) => {
+                reject(e.message);
+            });
+
+            req.end();
 
         });
 
@@ -159,7 +183,7 @@ function stecaGridScraper(host) {
                 path: "/gen.yield.total.chart.js"
             };
 
-            http.request(optionsProdTotal, function (res) {
+            const req = http.request(optionsProdTotal, function (res) {
 
                 var data = '';
 
@@ -179,7 +203,13 @@ function stecaGridScraper(host) {
                     resolve(data);
 
                 });
-            }).end();
+            });
+
+            req.on('error', (e) => {
+                reject(e.message);
+            });
+
+            req.end();
 
         });
 

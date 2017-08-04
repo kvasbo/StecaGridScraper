@@ -8,5 +8,19 @@
   },
   "author": "Audun Kvasbø",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/kvasbo/StecaGridScraper.git"
+  },
+  "keywords": [
+    "steca",
+    "inverter",
+    "solar"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/kvasbo/StecaGridScraper/issues"
+  },
+  "homepage": "https://gitlab.com/kvasbo/StecaGridScraper#README"
 }
