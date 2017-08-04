@@ -26,8 +26,7 @@ function stecaGridScraper(host) {
                 });
                 res.on('end', function () {
 
-                    var start = data.indexOf("P AC");
-                    start = start + 27;
+                    var start = data.indexOf("P AC") + 27;
                     data = data.substring(start);
                     var end = data.indexOf("<");
                     data = data.substring(0, end);
@@ -66,12 +65,10 @@ function stecaGridScraper(host) {
                 res.on('end', function () {
 
                     let start = data.indexOf("labelValueId") + 29;
-                    let end = data.indexOf("Wh") - 1;
-
                     data = data.substring(start);
+                    let end = data.indexOf("Wh") - 1;
                     data = data.substring(0, end);
                     data = Math.round(parseFloat(data) * 1000);
-
                     resolve(data);
 
                 });
@@ -155,10 +152,8 @@ function stecaGridScraper(host) {
                     let d = data.split(/\r?\n/);
                     let e = "{" + d[10] + d[11] + "}";
                     let f = JSON.parse(e);
-
                     let sum = f.data.reduce((a, b) => a + b, 0);
                     sum = Math.round(parseFloat(sum) * 1000);
-
                     resolve(sum);
 
                 });
@@ -193,13 +188,10 @@ function stecaGridScraper(host) {
                 res.on('end', function () {
 
                     let start = data.indexOf("labelValueId") + 29;
-                    let end = data.indexOf("Wh") - 1;
-
                     data = data.substring(start);
+                    let end = data.indexOf("Wh") - 1;
                     data = data.substring(0, end);
-
                     data = Math.round(parseFloat(data) * 1000000);
-
                     resolve(data);
 
                 });
