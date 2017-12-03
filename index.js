@@ -104,7 +104,7 @@ function stecaGridScraper(host) {
                     var d = data.split(/\r?\n/);
                     var month = new Date().getMonth() + 1;
 
-                    if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 10) {
+                    if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
                         var e = "{" + d[10] + d[11] + d[12] + d[13] + "}";
                     }
                     else {
