@@ -1,4 +1,3 @@
-const http = require('http');
 const fetch = require('node-fetch');
 
 function stecaGridScraper(host) {
@@ -7,7 +6,6 @@ function stecaGridScraper(host) {
     this.getFile = async (path) => {
       const url = `http://${this.host}/${path}`;
       try {
-        console.log('getting', url);
         const data = await fetch(url);
         const text = await data.text();
         return text;
@@ -50,18 +48,9 @@ function stecaGridScraper(host) {
     this.getProductionThisMonth = async () => {
       try {
         const data = await this.getFile('gen.yield.month.chart.js');
-        var d = data.split(/\r?\n/);
-        var month = new Date().getMonth() + 1;
-        if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
-            var e = "{" + d[10] + d[11] + d[12] + d[13] + "}";
-        }
-        else {
-            var e = "{" + d[10] + d[11] + d[12] + "}";
-        }
-        let f = JSON.parse(e);
-        let sum = f.data.reduce((a, b) => a + b, 0);
-        sum = Math.round(parseFloat(sum) * 1000);
-        return sum;
+        const dayProduction = getProductionFromMonthlyData(data);
+        const sum = dayProduction.reduce((a, b) => a + b, 0);
+        return Math.round(parseFloat(sum) * 1000);
       } catch (err) {
         console.log(err);
         throw err;
@@ -71,12 +60,11 @@ function stecaGridScraper(host) {
     this.getProductionThisYear = async () => {
       try {
         const data = await this.getFile('gen.yield.year.chart.js');
-        let d = data.split(/\r?\n/);
-        let e = "{" + d[10] + d[11] + "}";
-        let f = JSON.parse(e);
-        let sum = f.data.reduce((a, b) => a + b, 0);
-        sum = Math.round(parseFloat(sum) * 1000);
-        return sum;
+        const d = data.split(/\r?\n/);
+        const e = "{" + d[10] + d[11] + "}";
+        const f = JSON.parse(e);
+        const sum = f.data.reduce((a, b) => a + b, 0);
+        return Math.round(parseFloat(sum) * 1000);
       } catch (err) {
         console.log(err);
         throw err;
@@ -85,13 +73,12 @@ function stecaGridScraper(host) {
 
     this.getProductionTotal = async () => {
       try {
-        let data = await this.getFile('gen.yield.total.chart.js');
-        let start = data.indexOf("labelValueId") + 29;
-        data = data.substring(start);
-        let end = data.indexOf("Wh") - 1;
-        data = data.substring(0, end);
-        sum = Math.round(parseFloat(data) * 1000000);
-        return sum;
+        const data = await this.getFile('gen.yield.total.chart.js');
+        const start = data.indexOf("labelValueId") + 29;
+        const dataWithoutStart = data.substring(start);
+        const end = dataWithoutStart.indexOf("Wh") - 1;
+        const doneData = dataWithoutStart.substring(0, end);
+        return Math.round(parseFloat(doneData) * 1000000);
       } catch (err) {
         console.log(err);
         throw err;
@@ -100,3 +87,20 @@ function stecaGridScraper(host) {
 }
 
 module.exports = stecaGridScraper;
+
+// Behold, the art of scraping!
+function getProductionFromMonthlyData(data) {
+  try {
+    const d = data.split(/\r?\n/); // Create array of lines
+    const start = d.indexOf('"data": ['); // Find start of data set
+    const choppedOfStart = d.slice(start); // Chop off from start
+    const end = choppedOfStart.indexOf('}'); // Find end (in chopped array)
+    const dataArray = d.slice(start, start + end); // Extract data set
+    const jsonData = "{" + dataArray.join('') + "}"; // Create json object
+    const outData = JSON.parse(jsonData); // Parse json
+    return outData.data; //Return
+  } catch (err) {
+    console.log("error parsing json array", err);
+    return [];
+  }
+}
