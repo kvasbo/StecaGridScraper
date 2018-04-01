@@ -1,153 +1,102 @@
 const http = require('http');
-module.exports = stecaGridScraper;
+const fetch = require('node-fetch');
 
 function stecaGridScraper(host) {
     this.host = host;
-    this.getEffect = function () {
-        return new Promise((resolve, reject) => {
-            const optionsEffect = {
-                host: this.host,
-                path: "/gen.measurements.table.js"
-            };
 
-            const req = http.request(optionsEffect, function (res) {
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function () {
-                    var start = data.indexOf("P AC") + 27;
-                    data = data.substring(start);
-                    var end = data.indexOf("<");
-                    data = data.substring(0, end);
-                    var dataInt = parseInt(data);
-                    resolve(dataInt);
-                });
-            });
-            req.on('error', (e) => {
-                reject(e.message);
-            });
-            req.end();
-        });
-    };
+    this.getFile = async (path) => {
+      const url = `http://${this.host}/${path}`;
+      try {
+        console.log('getting', url);
+        const data = await fetch(url);
+        const text = await data.text();
+        return text;
+      } catch (err) {
+        console.log(`Error fetching ${url}`);
+        throw err;
+      }
+    } 
 
-    this.getProductionToday = function () {
-        return new Promise((resolve, reject) => {
-            const optionsProdToday = {
-                host: host,
-                path: "/gen.yield.day.chart.js"
-            };
+    this.getEffect = async () => {
+      try {
+        const content = await this.getFile('gen.measurements.table.js');
+        const start = content.indexOf("P AC") + 27;
+        const tmpFromStart = content.substring(start);
+        const end = tmpFromStart.indexOf("<");
+        const tmpDone = tmpFromStart.substring(0, end);
+        const dataInt = parseInt(tmpDone);
+        return dataInt;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    }
 
-            const req = http.request(optionsProdToday, function (res) {
-                var data = '';
+    this.getProductionToday = async () => {
+      try {
+        const content = await this.getFile('gen.yield.day.chart.js');
+        const start = content.indexOf("labelValueId") + 29;
+        const tmpFromStart = content.substring(start);
+        const end = tmpFromStart.indexOf("Wh") - 1;
+        const tmpDone = tmpFromStart.substring(0, end);
+        const dataInt = Math.round(parseFloat(tmpDone) * 1000);
+        return dataInt;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    }
 
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function () {
-                    let start = data.indexOf("labelValueId") + 29;
-                    data = data.substring(start);
-                    let end = data.indexOf("Wh") - 1;
-                    data = data.substring(0, end);
-                    data = Math.round(parseFloat(data) * 1000);
-                    resolve(data);
-                });
-            });
+    this.getProductionThisMonth = async () => {
+      try {
+        const data = await this.getFile('gen.yield.month.chart.js');
+        var d = data.split(/\r?\n/);
+        var month = new Date().getMonth() + 1;
+        if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
+            var e = "{" + d[10] + d[11] + d[12] + d[13] + "}";
+        }
+        else {
+            var e = "{" + d[10] + d[11] + d[12] + "}";
+        }
+        let f = JSON.parse(e);
+        let sum = f.data.reduce((a, b) => a + b, 0);
+        sum = Math.round(parseFloat(sum) * 1000);
+        return sum;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    }
 
-            req.on('error', (e) => {
-                reject(e.message);
-            });
-            req.end();
-        })
-    };
+    this.getProductionThisYear = async () => {
+      try {
+        const data = await this.getFile('gen.yield.year.chart.js');
+        let d = data.split(/\r?\n/);
+        let e = "{" + d[10] + d[11] + "}";
+        let f = JSON.parse(e);
+        let sum = f.data.reduce((a, b) => a + b, 0);
+        sum = Math.round(parseFloat(sum) * 1000);
+        return sum;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    }
 
-    this.getProductionThisMonth = function () {
-        return new Promise((resolve, reject) => {
-            const optionsProdMonth = {
-                host: host,
-                path: "/gen.yield.month.chart.js"
-            };
-            const req = http.request(optionsProdMonth, function (res) {
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function () {
-                    var d = data.split(/\r?\n/);
-                    var month = new Date().getMonth() + 1;
-                    if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
-                        var e = "{" + d[10] + d[11] + d[12] + d[13] + "}";
-                    }
-                    else {
-                        var e = "{" + d[10] + d[11] + d[12] + "}";
-                    }
-                    let f = JSON.parse(e);
-                    let sum = f.data.reduce((a, b) => a + b, 0);
-                    sum = Math.round(parseFloat(sum) * 1000);
-                    resolve(sum);
-                });
-            });
-
-            req.on('error', (e) => {
-                reject(e.message);
-            });
-            req.end();
-        })
-    };
-
-    this.getProductionThisYear = function () {
-        return new Promise((resolve, reject) => {
-            const optionsProdYear = {
-                host: host,
-                path: "/gen.yield.year.chart.js"
-            };
-            const req = http.request(optionsProdYear, function (res) {
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function () {
-                    let d = data.split(/\r?\n/);
-                    let e = "{" + d[10] + d[11] + "}";
-                    let f = JSON.parse(e);
-                    let sum = f.data.reduce((a, b) => a + b, 0);
-                    sum = Math.round(parseFloat(sum) * 1000);
-                    resolve(sum);
-                });
-            });
-
-            req.on('error', (e) => {
-                reject(e.message);
-            });
-
-            req.end();
-        });
-    };
-    this.getProductionTotal = function () {
-        return new Promise((resolve, reject) => {
-            const optionsProdTotal = {
-                host: host,
-                path: "/gen.yield.total.chart.js"
-            };
-            const req = http.request(optionsProdTotal, function (res) {
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function () {
-                    let start = data.indexOf("labelValueId") + 29;
-                    data = data.substring(start);
-                    let end = data.indexOf("Wh") - 1;
-                    data = data.substring(0, end);
-                    data = Math.round(parseFloat(data) * 1000000);
-                    resolve(data);
-                });
-            });
-
-            req.on('error', (e) => {
-                reject(e.message);
-            });
-            req.end();
-        });
+    this.getProductionTotal = async () => {
+      try {
+        let data = await this.getFile('gen.yield.total.chart.js');
+        let start = data.indexOf("labelValueId") + 29;
+        data = data.substring(start);
+        let end = data.indexOf("Wh") - 1;
+        data = data.substring(0, end);
+        sum = Math.round(parseFloat(data) * 1000000);
+        return sum;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
     }
 }
+
+module.exports = stecaGridScraper;
