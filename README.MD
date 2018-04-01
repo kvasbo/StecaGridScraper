@@ -1,5 +1,7 @@
 Screen scraper for Stecagrid solar inverters with compatible firmwares. Uses the node.js built in http library.
 
+Uses async/await, so requires a newer version of Node. 
+
 *How to use*: 
 
 Initialize with the IP address of the inverter: 
@@ -15,6 +17,11 @@ mySteca.getEffect()
 ```
 
 Get the production today (in watt hours):
+```javascript
+mySteca.getProductionToday()
+```
+
+Get the production today by hour (in watt hours):
 ```javascript
 mySteca.getProductionToday()
 ```

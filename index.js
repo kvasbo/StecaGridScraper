@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
+const moment = require('moment');
 
 // Behold, the art of scraping!
-function getProductionFromMonthlyData(data) {
+function getProductionFromRawData(data) {
   try {
     const d = data.split(/\r?\n/); // Create array of lines
     const start = d.indexOf('"data": ['); // Find start of data set
@@ -16,12 +17,23 @@ function getProductionFromMonthlyData(data) {
   }
 }
 
+function parseDailyData(data) {
+  const time = moment().startOf('day');
+  const out = [];
+  for (let i = 0; i < 144; i += 1) {
+    if (i < data.length) {
+      time.add(10, 'minutes');
+      out.push({ time: time.toDate(), production: data[i] });
+    }
+  }
+  return out;
+}
+
 function stecaGridScraper(host) {
   this.host = host;
 
   this.getFile = async (path) => {
     const url = `http://${this.host}/${path}`;
-    console.log('url', url);
     try {
       const data = await fetch(url);
       const text = await data.text();
@@ -59,10 +71,20 @@ function stecaGridScraper(host) {
     }
   };
 
+  this.getProductionTodayByHour = async () => {
+    try {
+      const content = await this.getFile('gen.yield.day.chart.js');
+      const byHour = parseDailyData(getProductionFromRawData(content));
+      return byHour;
+    } catch (err) {
+      throw err;
+    }
+  };
+
   this.getProductionThisMonth = async () => {
     try {
       const data = await this.getFile('gen.yield.month.chart.js');
-      const dayProduction = getProductionFromMonthlyData(data);
+      const dayProduction = getProductionFromRawData(data);
       const sum = dayProduction.reduce((a, b) => a + b, 0);
       return Math.round(parseFloat(sum) * 1000);
     } catch (err) {

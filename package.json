@@ -12,6 +12,7 @@
   "author": "Audun Kvasbø",
   "license": "MIT",
   "dependencies": {
+    "moment": "^2.22.0",
     "node-fetch": "^2.1.2"
   },
   "devDependencies": {
