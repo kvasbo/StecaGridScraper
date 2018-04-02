@@ -51,7 +51,7 @@ function stecaGridScraper(host) {
       const end = tmpFromStart.indexOf('<');
       const tmpDone = tmpFromStart.substring(0, end);
       const dataInt = parseInt(tmpDone, 10);
-      return dataInt;
+      return (Number.isNaN(dataInt)) ? 0 : dataInt;
     } catch (err) {
       throw err;
     }
