@@ -1,6 +1,6 @@
 {
   "name": "stecagridscrape",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Screen scrapes Stecagrid inverter for realtime sun energy production data. ",
   "main": "index.js",
   "scripts": {
