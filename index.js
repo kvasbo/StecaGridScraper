@@ -23,7 +23,7 @@ function parseDailyData(data) {
   for (let i = 0; i < 144; i += 1) {
     if (i < data.length) {
       time.add(10, 'minutes');
-      out.push({ time: time.toDate(), production: data[i] });
+      out.push({ minutesFromMidnight: i * 10, time: time.toDate(), production: data[i] });
     }
   }
   return out;
