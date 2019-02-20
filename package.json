@@ -1,6 +1,6 @@
 {
   "name": "stecagridscrape",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Screen scrapes Stecagrid inverter for realtime sun energy production data. ",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,8 @@
   "author": "Audun Kvasbø",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.22.0",
-    "node-fetch": "^2.1.2"
+    "moment": "2.24.0",
+    "node-fetch": "2.3.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",

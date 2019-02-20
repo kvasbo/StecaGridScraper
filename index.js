@@ -22,8 +22,8 @@ function parseDailyData(data) {
   const out = [];
   for (let i = 0; i < 144; i += 1) {
     if (i < data.length) {
-      time.add(10, 'minutes');
       out.push({ minutesFromMidnight: i * 10, time: time.toDate(), production: data[i] });
+      time.add(10, 'minutes');
     }
   }
   return out;
