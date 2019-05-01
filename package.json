@@ -1,6 +1,6 @@
 {
   "name": "stecagridscrape",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Screen scrapes Stecagrid inverter for realtime sun energy production data. ",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/kvasbo/StecaGridScraper.git"
+    "url": "git+ssh://git@github.com/kvasbo/StecaGridScraper.git"
   },
   "keywords": [
     "steca",
@@ -32,7 +32,7 @@
     "solar"
   ],
   "bugs": {
-    "url": "https://gitlab.com/kvasbo/StecaGridScraper/issues"
+    "url": "https://github.com/kvasbo/StecaGridScraper/issues"
   },
-  "homepage": "https://gitlab.com/kvasbo/StecaGridScraper#README"
+  "homepage": "https://github.com/kvasbo/StecaGridScraper#README"
 }
