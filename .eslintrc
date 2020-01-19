@@ -1,3 +1,4 @@
 {
-  "extends": "airbnb"
+  "extends": "eslint-config-airbnb-base",
+  "rules": { "arrow-parens": 0 }
 }

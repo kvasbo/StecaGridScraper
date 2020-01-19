@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Steca = require('./index');
 
 const mySteca = new Steca('192.168.1.146');
@@ -8,4 +9,3 @@ mySteca.getProductionTodayByHour().then(data => console.log('today by hour', dat
 mySteca.getProductionThisMonth().then(data => console.log('month', data));
 mySteca.getProductionThisYear().then(data => console.log('year', data));
 mySteca.getProductionTotal().then(data => console.log('total', data));
-
